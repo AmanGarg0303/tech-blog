@@ -44,6 +44,7 @@ const Post = ({
           src={thumbnail || "/thumbnail-placeholder.png"}
           alt={title}
           fill
+          sizes="100%"
           className="object-cover rounded-md object-center"
         />
       </div>

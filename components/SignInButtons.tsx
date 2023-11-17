@@ -13,7 +13,14 @@ const SignInButtons = () => {
           className="flex items-center border p-4 rounded-full gap-4 hover:bg-slate-100/40 transition"
         >
           <span>
-            <Image src="/github-logo.svg" width="30" height="30" alt="github" />
+            <Image
+              src="/github-logo.svg"
+              width={0}
+              height={0}
+              alt="github"
+              className="w-8 h-auto"
+              priority
+            />
           </span>
           Sign In with Github
         </button>
@@ -23,7 +30,7 @@ const SignInButtons = () => {
           className="flex items-center border p-4 rounded-full gap-4 hover:bg-slate-100/40 transition"
         >
           <span>
-            <Image src="/google-logo.svg" width="30" height="30" alt="google" />
+            <Image src="/google-logo.svg" width={30} height={30} alt="google" />
           </span>
           Sign In with Google
         </button>
