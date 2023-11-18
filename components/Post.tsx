@@ -110,7 +110,7 @@ const Post = async ({
             <button className="px-3 py-2 bg-slate-200 rounded-md">Edit</button>
           </Link>
 
-          <DeleteButton />
+          <DeleteButton id={id} />
         </div>
       )}
     </div>
