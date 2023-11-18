@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import DeleteButton from "./DeleteButton";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 interface PostProps {
   id: string;
@@ -14,7 +16,7 @@ interface PostProps {
   category?: string;
 }
 
-const Post = ({
+const Post = async ({
   id,
   author,
   authorEmail,
@@ -25,17 +27,31 @@ const Post = ({
   links,
   category,
 }: PostProps) => {
-  const isEditable = true;
+  const session = await getServerSession(authOptions);
+
+  const isEditable = session && session?.user?.email == authorEmail;
+
+  const dateObj = new Date(date);
+  const options: Intl.DateTimeFormatOptions = {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  };
+  const formattedDate = dateObj.toLocaleDateString("en-US", options);
 
   return (
     <div className="my-4 border-b-2 py-8">
       <div className="mb-3">
         {author ? (
           <>
-            Posted by: <span className="font-bold">{author}</span> on {date}
+            Posted by:{" "}
+            <span className="font-bold">
+              {session && session?.user?.name == author ? "You" : author}
+            </span>{" "}
+            on {formattedDate}
           </>
         ) : (
-          <>Posted on {date}</>
+          <>Posted on {formattedDate}</>
         )}
       </div>
 
