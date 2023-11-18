@@ -1,11 +1,32 @@
 "use client";
-import { categoriesData } from "@/data";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const CreatePostForm = () => {
   const [links, setLinks] = useState<string[]>([]);
   const [linkInput, setLinkInput] = useState("");
+  const [data, setData] = useState({
+    title: "",
+    content: "",
+    selectedCategory: "",
+    imageUrl: "",
+    publicId: "",
+  });
+  const [categories, setCategories] = useState([]);
+  const [error, setError] = useState("");
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchAllCategories = async () => {
+      const res = await fetch(`api/categories`);
+      const catNames = await res.json();
+      setCategories(catNames);
+    };
+
+    fetchAllCategories();
+  }, []);
 
   const addLink = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
@@ -19,13 +40,57 @@ const CreatePostForm = () => {
     setLinks((prev) => prev.filter((_, i) => i != idx));
   };
 
+  const handleChange = (e: any) => {
+    setData({ ...data, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!data.title || !data.content) {
+      setError("Title and Description are required");
+    }
+
+    try {
+      const res = await fetch(`api/posts/`, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          title: data.title,
+          content: data.content,
+          links,
+          selectedCategory: data.selectedCategory,
+          imageUrl: data.imageUrl,
+          publicId: data.publicId,
+        }),
+      });
+
+      if (res.ok) {
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">Create Post</h2>
-      <form className="flex flex-col gap-2">
-        <input type="text" placeholder="Title" />
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+        <input
+          type="text"
+          placeholder="Title"
+          name="title"
+          onChange={handleChange}
+        />
 
-        <textarea placeholder="Description"></textarea>
+        <textarea
+          placeholder="Description"
+          name="content"
+          onChange={handleChange}
+        ></textarea>
 
         {links &&
           links.map((link, i) => (
@@ -84,12 +149,16 @@ const CreatePostForm = () => {
           </button>
         </div>
 
-        <select className="p-3 rounded-md border">
+        <select
+          onChange={handleChange}
+          name="selectedCategory"
+          className="p-3 rounded-md border"
+        >
           <option value="">Select a Category</option>
-          {categoriesData &&
-            categoriesData.map((cat) => (
-              <option key={cat.id} value={cat.name}>
-                {cat.name}
+          {categories &&
+            categories.map((cat: any) => (
+              <option key={cat.id} value={cat.catName}>
+                {cat.catName}
               </option>
             ))}
         </select>
@@ -97,8 +166,7 @@ const CreatePostForm = () => {
         <button type="submit" className="primary-btn">
           Create Post
         </button>
-
-        <div className="p-2 text-red-500 font-semibold">Error Message</div>
+        {error && <div className="p-2 text-red-500 font-semibold">{error}</div>}
       </form>
     </div>
   );
