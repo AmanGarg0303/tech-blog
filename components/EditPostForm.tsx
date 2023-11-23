@@ -109,7 +109,7 @@ const EditPostForm = ({ post }: any) => {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">Create Post</h2>
+      <h2 className="text-2xl font-bold mb-4">Edit Post</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <input
           type="text"

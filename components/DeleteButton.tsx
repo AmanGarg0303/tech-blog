@@ -27,7 +27,6 @@ const DeleteButton = ({ id }: { id: string }) => {
         if (res.ok) {
           console.log("Post has been deleted.");
           const post = await res.json();
-          console.log(post);
           const { publicId } = post;
           await deleteImage(publicId);
         }
