@@ -67,11 +67,11 @@ export async function DELETE(
   try {
     const id = params.id;
 
-    await prisma.post.delete({
+    const post = await prisma.post.delete({
       where: { id },
     });
 
-    return NextResponse.json({ message: "Post has been deleted." });
+    return NextResponse.json(post);
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to delete post" },
