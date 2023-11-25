@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CldUploadButton, CldUploadWidgetResults } from "next-cloudinary";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 const CreatePostForm = () => {
   const [links, setLinks] = useState<string[]>([]);
@@ -15,9 +16,8 @@ const CreatePostForm = () => {
     imageUrl: "",
     publicId: "",
   });
-  const [categories, setCategories] = useState([]);
-  const [error, setError] = useState("");
 
+  const [categories, setCategories] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -80,7 +80,8 @@ const CreatePostForm = () => {
     e.preventDefault();
 
     if (!data.title || !data.content) {
-      setError("Title and Description are required");
+      toast.error("Title and description are required.");
+      return;
     }
 
     try {
@@ -100,9 +101,11 @@ const CreatePostForm = () => {
       });
 
       if (res.ok) {
+        toast.success("Post created.");
         router.push("/dashboard");
       }
     } catch (error) {
+      toast.error("Something went wrong.");
       console.log(error);
     }
   };
@@ -241,7 +244,6 @@ const CreatePostForm = () => {
         <button type="submit" className="primary-btn">
           Create Post
         </button>
-        {error && <div className="p-2 text-red-500 font-semibold">{error}</div>}
       </form>
     </div>
   );
