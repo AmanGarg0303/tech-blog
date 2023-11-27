@@ -101,6 +101,7 @@ const EditPostForm = ({ post }: any) => {
       if (res.ok) {
         toast.success("Post edited successfully.");
         router.push("/dashboard");
+        router.refresh();
       }
     } catch (error) {
       toast.error("Something went wrong.");

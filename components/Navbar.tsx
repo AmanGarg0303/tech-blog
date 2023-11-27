@@ -36,7 +36,7 @@ const Navbar = () => {
           </h1>
         </Link>
         <p className="text-sm font-medium">
-          Exploring Tomorrow&#39;s Innovations, <br />
+          Exploring Tomorrow&apos;s Innovations, <br />
           One Byte at a Time
         </p>
       </div>
